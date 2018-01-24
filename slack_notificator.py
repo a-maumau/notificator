@@ -24,6 +24,5 @@ class SlackNotificator(NotificatorTemplate):
 			traceback.print_exc()
 			print(e)
 
-# Incoming Webhooksを使って対象のチャンネルにメッセージを送付
 if __name__=='__main__':
 	print("nothing here.")
