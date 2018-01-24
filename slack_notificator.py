@@ -10,6 +10,7 @@ class SlackNotificator(NotificatorTemplate):
 		self.hook_url = hook_url
 
 	def send_message(self, msg):
+		# the permission of app directly affect this point.
 		content = {"username": self.user_name,
 				   "channel" : self.channel,
 				   "text"    : msg}
@@ -18,6 +19,7 @@ class SlackNotificator(NotificatorTemplate):
 		try:
 			resp = requests.post(self.hook_url, data=json.dumps(content))
 			if resp.ok != True:
+				# if it's not success, show the code
 				print("error code : {}".format(resp.status_code))
 		except Exception as e:
 			import traceback

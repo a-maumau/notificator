@@ -9,6 +9,10 @@ from email.utils import formatdate
 
 from notificator_template import NotificatorTemplate
 
+SMTP_ADDRESS = 'smtp.gmail.com'
+SMTP_PORT = 587   # for TLS
+#SMTP_PORT = 465  # for SSL
+
 """
 from_addr = 'sender@gmail.com'
 passwd    = 'password'
@@ -18,18 +22,16 @@ subject   = 'test mail from python'
 body      = 'Hi! This mail is sent from python script!'
 """
 
-SMTP_ADDRESS = 'smtp.gmail.com'
-SMTP_PORT = 587
-# SMTP_PORT = 465
-
 class MailNotificator(NotificatorTemplate):
     def __init__(self, passwd, from_addr, to_addr, bcc_addrs, subject):
+        # set mail content
         self._passwd    = passwd
         self._from_addr = from_addr
         self._to_addr   = to_addr
         self._bcc_addrs = bcc_addrs
         self._subject   = subject
 
+        # Actually, I don't know what it should be...
         self.charset = "iso-2022-jp"
 
     def _create_message(self, body):
