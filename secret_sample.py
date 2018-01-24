@@ -10,7 +10,7 @@
 	I recommend "2-Step Verification", and set that password
 """
 MAIL_PASSWORD    = "set pass word of GMAIL_ACCOUNT"
-MAIL_ACCOUNT     = "notification.maumau@gmail.com"
+MAIL_ACCOUNT     = "your_address@gmail.com"
 MAIL_TO_ADDRESS  = "mail address you want to send a notification mail"
 MAIL_BCC_ADDRESS = "bcc address"
 MAIL_SUBJECT     = "subject of the mail"
