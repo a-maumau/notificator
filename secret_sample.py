@@ -16,7 +16,7 @@ MAIL_BCC_ADDRESS = "bcc address"
 MAIL_SUBJECT     = "subject of the mail"
 
 # slack
-# you need get your own hook url
+# you need get your own application Webhook URL
 # for the permission of App for slack that you made, it don't always affect the settings. 
 SLACK_USER_NAME = "slack user name"
 SLACK_CHANNEL   = "#channel or @channel"
