@@ -1,9 +1,9 @@
 # Setup  
-Require requests.  
+**Require requests**.  
 ```
 pip (or pip3) install requests
 ```  
-Also you need to prepare the *`secret.py`* by yourself.  
+Also you need to **prepare the `secret.py`** by yourself.  
 see the `secret_sample.py` for example.
 
 # Usage  
