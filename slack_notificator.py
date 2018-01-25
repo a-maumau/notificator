@@ -12,9 +12,14 @@ class SlackNotificator(NotificatorTemplate):
 	def send_message(self, msg):
 		# the permission of app directly affect this point.
 		content = {"username": self.user_name,
-				   "channel" : self.channel,
-				   "text"    : msg}
-		# other parameter : "icon_emoji":':grim:' , "channel" : 'general'
+			   "channel" : self.channel,
+			   "text"    : msg}
+		"""
+			other parameter like "icon_emoji":':grim:'...
+			for detail see https://api.slack.com/methods/chat.postMessage
+			
+			to use mention like '@here', use <!channel> <!user_name>
+		"""
 
 		try:
 			resp = requests.post(self.hook_url, data=json.dumps(content))
