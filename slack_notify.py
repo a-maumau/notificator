@@ -58,4 +58,4 @@ if __name__ == '__main__':
 	if args.msg_from_input:
 		args.msg = nonttyinput
 	
-	notificate_by_slack(args.msg + "\n[start time: {}]".format(time_stamp) if args.timestamp else "")
+	notificate_by_slack(args.msg + ("\n[start time: {}]".format(time_stamp)) if args.timestamp else "")
