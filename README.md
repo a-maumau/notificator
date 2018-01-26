@@ -12,6 +12,6 @@ see the `test_notification.py` for example.
 Also it is one way to use in pipe.  
 For example,  
 ```
-hogehoge | python test_notification.py
+hogehoge | python slack_notify.py
 ```  
-This will make `test_notification.py` run after `hogehoge` ended.
+This will make `slack_notify.py` run after `hogehoge` ended.
