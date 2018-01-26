@@ -1,3 +1,6 @@
+# in case python2
+from __future__ import print_function
+
 import json
 import requests
 
@@ -11,14 +14,19 @@ class SlackNotificator(NotificatorTemplate):
 
 	def send_message(self, msg):
 		# the permission of app directly affect this point.
-		content = {"username": self.user_name,
-			   "channel" : self.channel,
-			   "text"    : msg}
+		content = {"username" : self.user_name,
+			   "channel"  : self.channel,
+			   "text"     : msg
+                	  }
 		"""
 			other parameter like "icon_emoji":':grim:'...
 			for detail see https://api.slack.com/methods/chat.postMessage
 			
-			to use mention like '@here', use <!channel> <!user_name>
+			this doesn't work anymore ?
+				to use mention like '@here', use <!channel> <!user_name>
+			
+			deprecated parameter
+				"link_names" : True use insted <@user_name> util 2018.9, after this use <@user_id>?
 		"""
 
 		try:
@@ -26,6 +34,7 @@ class SlackNotificator(NotificatorTemplate):
 			if resp.ok != True:
 				# if it's not success, show the code
 				print("error code : {}".format(resp.status_code))
+		
 		except Exception as e:
 			import traceback
 			traceback.print_exc()
