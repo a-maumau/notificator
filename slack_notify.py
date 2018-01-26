@@ -52,9 +52,9 @@ if __name__ == '__main__':
 	time_stamp = now.strftime('%Y/%m/%d %H:%M:%S %Z %z')
 	
 	# which means input is from pipe or redirection
-       	if sys.stdin.isatty() == False:
+	if sys.stdin.isatty() == False:
 		nonttyinput = sys.stdin.read()
-        
+	
 	if args.msg_from_input:
 		args.msg = nonttyinput
 	
