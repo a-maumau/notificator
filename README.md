@@ -15,3 +15,4 @@ For example,
 hogehoge | python slack_notify.py
 ```  
 This will make `slack_notify.py` run after `hogehoge` ended.
+I recommend this style because we do not need to embed this in the code.
