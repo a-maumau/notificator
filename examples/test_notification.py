@@ -14,4 +14,4 @@ notificator.setSlack()
 notificator.setMail()
 
 # send notification with message "test notification." from all set up method.
-notificator.send_notification("test notification.")
+notificator.notify("test notification.")

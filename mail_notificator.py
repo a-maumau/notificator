@@ -16,19 +16,19 @@ SMTP_PORT = 587   # for TLS
 """
 from_addr = 'sender@gmail.com'
 passwd    = 'password'
-to_addrs  = 'receiver@example.com'
-bcc_addrs = 'receiver2@example.com'
+to_addr  = 'receiver@example.com'
+bcc_addr = 'receiver2@example.com'
 subject   = 'test mail from python'
 body      = 'Hi! This mail is sent from python script!'
 """
 
 class MailNotificator(NotificatorTemplate):
-    def __init__(self, passwd, from_addr, to_addr, bcc_addrs, subject):
+    def __init__(self, passwd, from_addr, to_addr, bcc_addr, subject):
         # set mail content
         self._passwd    = passwd
         self._from_addr = from_addr
         self._to_addr   = to_addr
-        self._bcc_addrs = bcc_addrs
+        self._bcc_addr = bcc_addr
         self._subject   = subject
 
         # Actually, I don't know what it should be...
@@ -40,7 +40,7 @@ class MailNotificator(NotificatorTemplate):
         msg['Subject'] = self._subject
         msg['From']    = self._from_addr
         msg['To']      = self._to_addr
-        msg['Bcc']     = self._bcc_addrs
+        msg['Bcc']     = self._bcc_addr
         msg['Date']    = formatdate()
 
         return msg

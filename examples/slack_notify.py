@@ -21,8 +21,8 @@ def notificate_by_slack(msg="notification"):
 	# see the secret_sample.py
 	notificator.setSlack()
 
-	# send notification with message "test notification." from all set up method.
-	notificator.send_notification(msg)
+	# send notification with message "test notification."
+	notificator.notify(msg)
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='notificate.py [--msg "notification message"| -msg_from_input]', epilog="")
