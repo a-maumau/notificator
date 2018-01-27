@@ -7,7 +7,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.utils import formatdate
 
-from notificator_template import NotificatorTemplate
+from .notificator_template import NotificatorTemplate
 
 SMTP_ADDRESS = 'smtp.gmail.com'
 SMTP_PORT = 587   # for TLS

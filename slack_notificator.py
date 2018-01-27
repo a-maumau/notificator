@@ -4,7 +4,7 @@ from __future__ import print_function
 import json
 import requests
 
-from notificator_template import NotificatorTemplate
+from .notificator_template import NotificatorTemplate
 
 class SlackNotificator(NotificatorTemplate):
 	def __init__(self, user_name, channel, hook_url):
