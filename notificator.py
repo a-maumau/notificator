@@ -1,8 +1,6 @@
 import threading
 
-from .mail_notificator import MailNotificator
-from .slack_notificator import SlackNotificator
-
+from .notification import MailNotification, SlackNotification
 from . import secret
 
 class Notificator:
@@ -11,17 +9,17 @@ class Notificator:
 
 	# set default Slack notification, which is written in secret.py
 	def setSlack(self):
-		self._notificators.append(SlackNotificator(secret.SLACK_USER_NAME, secret.SLACK_CHANNEL, secret.SLACK_HOOK_URL))
+		self._notificators.append(SlackNotification(secret.SLACK_USER_NAME, secret.SLACK_CHANNEL, secret.SLACK_HOOK_URL))
 
 	def addSlackNotify(self, user_name, channel, hook_url):
-		self._notificators.append(SlackNotificator(user_name, channel, hook_url))
+		self._notificators.append(SlackNotification(user_name, channel, hook_url))
 
 	# set default mail notification, which is written in secret.py
 	def setMail(self):
-		self._notificators.append(MailNotificator(secret.MAIL_PASSWORD, secret.MAIL_ACCOUNT, secret.MAIL_TO_ADDRESS, secret.MAIL_BCC_ADDRESS, secret.MAIL_SUBJECT))
+		self._notificators.append(MailNotification(secret.MAIL_PASSWORD, secret.MAIL_ACCOUNT, secret.MAIL_TO_ADDRESS, secret.MAIL_BCC_ADDRESS, secret.MAIL_SUBJECT))
 
 	def addMailNotify(self, passwd, account, to_addr, bcc_addr, subject):
-		self._notificators.append(MailNotificator(passwd, account, to_addr, bcc_addr, subject))
+		self._notificators.append(MailNotification(passwd, account, to_addr, bcc_addr, subject))
 
 	def _send_notification(self, msg):
 		# broadcast notification
