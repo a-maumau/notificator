@@ -3,6 +3,8 @@
 ```
 pip (or pip3) install requests
 ```  
+Other kinds of libraries are the same.  
+if you need, install it.  
 Also you need to **prepare the `secret.py`** by yourself.  
 see the `secret_sample.py` for example.
 
