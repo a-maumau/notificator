@@ -208,7 +208,7 @@ class Notificator:
 		else:
 			self._send_notification(msg)
 
-def notificate_by_slack(msg, args):
+def notificate(msg, args):
 	# create a Notificator
 	notificator = Notificator()
 
@@ -261,4 +261,4 @@ if __name__ == '__main__':
 		args.msg = nonttyinput
 	
 	# send notification
-	notificate_by_slack(msg="{}".format(args.msg + ("\n[start time: {}]".format(time_stamp) if args.timestamp else "")), args=args)
+	notificate(msg="{}".format(args.msg + ("\n[start time: {}]".format(time_stamp) if args.timestamp else "")), args=args)
