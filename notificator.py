@@ -40,5 +40,3 @@ class Notificator:
 				print(e)
 		else:
 			self._send_notification(msg)
-
-		print("ended")
