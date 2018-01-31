@@ -1,7 +1,11 @@
+☑️Mail  
+☑️ Slak  
+☑️Twitter  
+
 # Require  
-**Require requests**.  
+at least require **requests, equests_oauthlib**.  
 ```
-pip (or pip3) install requests
+pip (or pip3) install requests equests_oauthlib
 ```  
 Other kinds of libraries are the same.  
 if you need, install it.  
