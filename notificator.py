@@ -3,7 +3,7 @@ from __future__ import print_function
 
 import threading
 
-from .notification import MailNotification, SlackNotification
+from .notification import MailNotification, SlackNotification, TwitterNotification
 from . import secret
 
 class Notificator:
@@ -23,6 +23,13 @@ class Notificator:
 
 	def addSlackNotify(self, user_name, channel, hook_url):
 		self._notificators.append(SlackNotification(user_name, channel, hook_url))
+
+	# set default Twitter notification, which is written in secret.py
+	def setTwitter(self):
+		self._notificators.append(TwitterNotification(secret.API_KEY, secret.API_SECRET, secret.ACCESS_TOKEN, secret.ACCESS_SECRET))
+
+	def addTwitterNotify(self, api_key, api_secret, access_token, access_secret):
+		self._notificators.append(TwitterNotification(api_key, api_secret, access_token, access_secret))
 
 	def show_list(self):
 		for idx, noti in enumerate(self._notificators):

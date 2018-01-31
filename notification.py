@@ -9,17 +9,24 @@ from email.utils import formatdate
 
 import json
 import requests
+from requests_oauthlib import OAuth1Session
 
 class NotificationTemplate(object):
 	__metaclass__ = abc.ABCMeta
 
 	@abc.abstractmethod
 	def send_message(self, msg):
+		# arg should be str 
 		raise NotImplementedError()
 
 	@abc.abstractmethod
 	def contents(self):
+		# return the setting str for debug or interact
 		raise NotImplementedError()
+
+	def setMentionUsers(self, user_names):
+		# set mention str like "@user_name"
+		pass
 
 class MailNotification(NotificationTemplate):
 	"""
@@ -90,6 +97,10 @@ class SlackNotification(NotificationTemplate):
 		self.user_name = user_name
 		self.channel = channel
 		self.hook_url = hook_url
+		self.mention_users = ""
+
+	def setMentionUsers(self, user_names):
+		self.mention_users = user_names
 
 	def send_message(self, msg):
 		"""
@@ -121,4 +132,33 @@ class SlackNotification(NotificationTemplate):
 			print(e)
 
 	def contents(self):
-		return "user_name:{}, channel:{}".format(self.user_name, self.channel)
+		return "user_name:{}, channel:{}, mention:{}".format(self.user_name, self.channel, self.mention_users)
+
+class TwitterNotification(NotificationTemplate):
+	post_url = "https://api.twitter.com/1.1/statuses/update.json"
+
+	def __init__(self, api_key, api_secret, access_token, access_secret):
+		self.api_key = api_key
+		self.api_secret = api_secret
+		self.access_token = access_token
+		self.access_secret = access_secret
+		self.mention_users = ""
+		self.twitter = OAuth1Session(self.api_key, self.api_secret, self.access_token, self.access_secret)
+
+	def setMentionUsers(self, user_names):
+		self.mention_users = user_names
+
+	def send_message(self, msg):
+		try:
+			resp = self.twitter.post(self.post_url, params={"status": msg})
+			if resp.ok != True:
+				# if it's not success, show the code
+				print("error code : {}".format(resp.status_code))
+
+		except Exception as e:
+			import traceback
+			traceback.print_exc()
+			print(e)
+
+	def contents(self):
+		return "mention:{}".format(self.mention_users)

@@ -21,3 +21,9 @@ MAIL_SUBJECT     = "subject of the mail"
 SLACK_USER_NAME = "slack user name"
 SLACK_CHANNEL   = "#channel or @channel"
 SLACK_HOOK_URL  = "hook url for app"
+
+#Twitter
+API_KEY = "consumer/api key"
+API_SECRET = "consumer/api secret"
+ACCESS_TOKEN = "access token"
+ACCESS_SECRET = "access secret"
