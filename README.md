@@ -3,7 +3,7 @@
 ☑️Twitter  
 
 # Require  
-at least require **requests, equests_oauthlib**.  
+at least require **requests, requests_oauthlib**.  
 ```
 pip (or pip3) install requests equests_oauthlib
 ```  
