@@ -1,5 +1,5 @@
 ☑️Mail  
-☑️ Slak  
+☑ Slack  
 ☑️Twitter  
 
 # Require  
