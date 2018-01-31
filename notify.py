@@ -308,9 +308,10 @@ if __name__ == '__main__':
 		now = datetime.now(tz)
 	else:
 		print("{} is not in the all_timezones_set, so the time zone is set to UTC".format(args.timezone))
-		now = datetime.now()
+		tz = pytz.timezone("UTC")
+		now = datetime.now(tz)
 	
-	time_stamp = now.strftime('%Y/%m/%d %H:%M:%S %Z %z')
+	start_time_stamp = now.strftime('%Y/%m/%d %H:%M:%S %Z %z')
 	
 	# which means input is from pipe or redirection
 	if sys.stdin.isatty() == False:
@@ -319,5 +320,8 @@ if __name__ == '__main__':
 	if args.msg_from_input:
 		args.msg = nonttyinput
 	
+	now = datetime.now(tz)
+	end_time_stamp = now.strftime('%Y/%m/%d %H:%M:%S %Z %z')
+
 	# send notification
-	notificate(msg="{}".format(args.msg + ("\n[start time: {}]".format(time_stamp) if args.timestamp else "")), args=args)
+	notificate(msg="{}".format(args.msg + ("\n[start: {}, end: {}]".format(start_time_stamp, end_time_stamp) if args.timestamp else "")), args=args)
