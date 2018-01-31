@@ -192,6 +192,7 @@ class TwitterNotification(NotificationTemplate):
 
 	def send_message(self, msg):
 		try:
+			# be careful for posting same sentence, witch cause 403 error.
 			resp = self.twitter.post(self.post_url, params={"status": msg})
 			if resp.ok != True:
 				# if it's not success, show the code

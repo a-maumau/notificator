@@ -124,7 +124,7 @@ class SlackNotification(NotificationTemplate):
 			resp = requests.post(self.hook_url, data=json.dumps(content))
 			if resp.ok != True:
 				# if it's not success, show the code
-				print("error code : {}".format(resp.status_code))
+				print("(Slack) error code : {}".format(resp.status_code))
 		
 		except Exception as e:
 			import traceback
@@ -150,10 +150,11 @@ class TwitterNotification(NotificationTemplate):
 
 	def send_message(self, msg):
 		try:
-			resp = self.twitter.post(self.post_url, params={"status": msg})
+			# be careful for posting same sentence, witch cause 403 error.
+			resp = self.twitter.post(self.post_url, params={"status":msg})
 			if resp.ok != True:
 				# if it's not success, show the code
-				print("error code : {}".format(resp.status_code))
+				print("(Twitter) error code : {}".format(resp.status_code))
 
 		except Exception as e:
 			import traceback
