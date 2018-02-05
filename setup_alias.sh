@@ -22,7 +22,7 @@ elif [[ $(echo $SHELL | grep sh) ]]; then
     RC_FILE=$HOME/.profile
 else
 	echo "Non-standard shell $SHELL detected. sorry"
-	echo "see the source and setup by yourself XD"
+	echo "See the source and setup by yourself XD"
 fi
 
 if [ -f "$RC_FILE" ]; then
