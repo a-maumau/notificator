@@ -25,4 +25,7 @@ I recommend this style because we do not need to embed this in the code.
 
 # For Lazy People
 You can just use `notify.py`  
-only you need to do is rewrite the `secret` class for your setting.
+only you need to do is rewrite the `secret` class for your setting.  
+
+# setup_alias.sh
+set up a alias of "python notify.py" to notify.
