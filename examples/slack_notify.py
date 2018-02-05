@@ -25,15 +25,21 @@ def notificate_by_slack(msg="notification"):
 	notificator.notify(msg)
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='notificate.py [--msg "notification message"| -msg_from_input]', epilog="")
+	parser = argparse.ArgumentParser(description='notify.py [option]\nuse it for your convenient and save time.', epilog="")
 	
-	parser.add_argument('--msg', type=str, default="notification.", help='notification message')
+	parser.add_argument('--msg', type=str, default="notification of the end of something", help='notification message')
+	parser.add_argument('--msg_begin', type=str, default="notification of the begin of something", help='notification message begining of the job or smething')
 	parser.add_argument('-msg_from_input', action="store_true", default=False, help='use the pipe or redirection input for msg.')
 	
 	parser.add_argument('--timezone', type=str, default="UTC", help='set time zone.\ndefault is "UTC".\nexample: "Asia/Tokyo"\nit must be in the time zone list in pytz.all_timezones_set\nuse option "--list_timezone" to see whole list.')
 	parser.add_argument('--list_timezone', action="store_true", default=False, help='show the list of time zones, which are in the pytz.all_timezones_set')
 	parser.add_argument('-timestamp', action="store_true", default=False, help='add a time stamp')
-	
+	parser.add_argument('-mention_begin', action="store_true", default=False, help='send mention begin of the script')
+
+	parser.add_argument('-nomail', action="store_true", default=False, help="won't use mail")
+	parser.add_argument('-noslack', action="store_true", default=False, help="won't use slack")
+	parser.add_argument('-notwitter', action="store_true", default=False, help="won't use twitter")
+
 	args = parser.parse_args()
 	
 	if args.list_timezone:
@@ -51,6 +57,9 @@ if __name__ == '__main__':
 		now = datetime.now(tz)
 	
 	start_time_stamp = now.strftime('%Y/%m/%d %H:%M:%S %Z %z')
+
+	if args.mention_begin:
+		notificate(msg="{}".format(args.msg + ("\n[ begin: {}]".format(start_time_stamp) if args.timestamp else "")), args=args)
 	
 	# which means input is from pipe or redirection
 	if sys.stdin.isatty() == False:
@@ -63,4 +72,4 @@ if __name__ == '__main__':
 	end_time_stamp = now.strftime('%Y/%m/%d %H:%M:%S %Z %z')
 
 	# send notification
-	notificate(msg="{}".format(args.msg + ("\n[start: {}, end: {}]".format(start_time_stamp, end_time_stamp) if args.timestamp else "")))
+	notificate(msg="{}".format(args.msg + ("\n[ begin: {}, end: {}]".format(start_time_stamp, end_time_stamp) if args.timestamp else "")), args=args)
