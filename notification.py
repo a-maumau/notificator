@@ -14,6 +14,9 @@ from requests_oauthlib import OAuth1Session
 class NotificationTemplate(object):
 	__metaclass__ = abc.ABCMeta
 
+	def __init__(self, suppress_err=True):
+		self.suppress_err = suppress_err
+
 	@abc.abstractmethod
 	def send_message(self, msg):
 		# arg should be str 
@@ -37,7 +40,7 @@ class MailNotification(NotificationTemplate):
 	SMTP_PORT = 587   # for TLS
 	#SMTP_PORT = 465  # for SSL
 	
-	def __init__(self, passwd, from_addr, to_addr, bcc_addr, subject):
+	def __init__(self, passwd, from_addr, to_addr, bcc_addr, subject, suppress_err=True):
 		"""
 			from_addr = 'sender@gmail.com'
 			passwd    = 'password'
@@ -46,6 +49,8 @@ class MailNotification(NotificationTemplate):
 			subject   = 'test mail from python'
 			body      = 'Hi! This mail is sent from python script!'
 		"""
+		super().__init__(suppress_err)
+
 		# set mail content
 		self._passwd = passwd
 		self._from_addr = from_addr
@@ -80,20 +85,24 @@ class MailNotification(NotificationTemplate):
 			smtpobj.sendmail(self._from_addr, self._to_addr, mail_content.as_string())
 			smtpobj.close()
 		except Exception as e:
-			import traceback
-			traceback.print_exc()
-			print(e)
-			print("which means, could not send a notification mail...")
+			if not self.suppress_err:
+				import traceback
+				traceback.print_exc()
+				print(e)
+				print("which means, could not send a notification mail...")
+	
 	def contents(self):
 		return "pass:********, account:{}, to:{}, bcc:{}, subject:{}".format(self._from_addr, self._to_addr, self._bcc_addr, self._subject)
 
 class SlackNotification(NotificationTemplate):
-	def __init__(self, user_name, channel, hook_url):
+	def __init__(self, user_name, channel, hook_url, suppress_err=True):
 		"""
 			user_name = 'user_name'
 			channel   = 'which channel you want to post'
 			hook_url  = 'api's web hook url
 		"""
+		super().__init__(suppress_err)
+
 		self.user_name = user_name
 		self.channel = channel
 		self.hook_url = hook_url
@@ -123,13 +132,15 @@ class SlackNotification(NotificationTemplate):
 		try:
 			resp = requests.post(self.hook_url, data=json.dumps(content))
 			if resp.ok != True:
-				# if it's not success, show the code
-				print("(Slack) error code : {}".format(resp.status_code))
+				if not self.suppress_err:
+					# if it's not success, show the code
+					print("(Slack) error code : {}".format(resp.status_code))
 		
 		except Exception as e:
-			import traceback
-			traceback.print_exc()
-			print(e)
+			if not self.suppress_err:
+				import traceback
+				traceback.print_exc()
+				print(e)
 
 	def contents(self):
 		return "user_name:{}, channel:{}, mention:{}".format(self.user_name, self.channel, self.mention_users)
@@ -137,7 +148,13 @@ class SlackNotification(NotificationTemplate):
 class TwitterNotification(NotificationTemplate):
 	post_url = "https://api.twitter.com/1.1/statuses/update.json"
 
-	def __init__(self, api_key, api_secret, access_token, access_secret):
+	def __init__(self, api_key, api_secret, access_token, access_secret, suppress_err=True):
+		"""
+			you need get the api_key, api_secret, access_token, access_secret
+			from twitter developer.
+		"""
+		super().__init__(suppress_err)
+
 		self.api_key = api_key
 		self.api_secret = api_secret
 		self.access_token = access_token
@@ -153,13 +170,15 @@ class TwitterNotification(NotificationTemplate):
 			# be careful for posting same sentence, witch cause 403 error.
 			resp = self.twitter.post(self.post_url, params={"status":msg})
 			if resp.ok != True:
-				# if it's not success, show the code
-				print("(Twitter) error code : {}".format(resp.status_code))
+				if not self.suppress_err:
+					# if it's not success, show the code
+					print("(Twitter) error code : {}".format(resp.status_code))
 
 		except Exception as e:
-			import traceback
-			traceback.print_exc()
-			print(e)
+			if not self.suppress_err:
+				import traceback
+				traceback.print_exc()
+				print(e)
 
 	def contents(self):
 		return "mention:{}".format(self.mention_users)

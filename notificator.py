@@ -7,29 +7,39 @@ from .notification import MailNotification, SlackNotification, TwitterNotificati
 from . import secret
 
 class Notificator:
-	def __init__(self):
+	def __init__(self, suppress_err=True):
 		self._notificators = []
+		self.suppress_err = suppress_err
+		self._set_mail = False
+		self._set_slack = False
+		self._set_twitter = False
 
 	# set default mail notification, which is written in secret.py
 	def setMail(self):
-		self._notificators.append(MailNotification(secret.MAIL_PASSWORD, secret.MAIL_ACCOUNT, secret.MAIL_TO_ADDRESS, secret.MAIL_BCC_ADDRESS, secret.MAIL_SUBJECT))
+		if not self._set_mail:
+			self._notificators.append(MailNotification(secret.MAIL_PASSWORD, secret.MAIL_ACCOUNT, secret.MAIL_TO_ADDRESS, secret.MAIL_BCC_ADDRESS, secret.MAIL_SUBJECT, self.suppress_err))
+			self._set_mail = True
 
-	def addMailNotify(self, passwd, account, to_addr, bcc_addr, subject):
-		self._notificators.append(MailNotification(passwd, account, to_addr, bcc_addr, subject))
+	def addMailNotify(self, passwd, account, to_addr, bcc_addr, subject, suppress_err=True):
+		self._notificators.append(MailNotification(passwd, account, to_addr, bcc_addr, subject, suppress_err))
 
 	# set default Slack notification, which is written in secret.py
 	def setSlack(self):
-		self._notificators.append(SlackNotification(secret.SLACK_USER_NAME, secret.SLACK_CHANNEL, secret.SLACK_HOOK_URL))
+		if not self._set_slack:
+			self._notificators.append(SlackNotification(secret.SLACK_USER_NAME, secret.SLACK_CHANNEL, secret.SLACK_HOOK_URL, self.suppress_err))
+			self._set_slack = True
 
-	def addSlackNotify(self, user_name, channel, hook_url):
-		self._notificators.append(SlackNotification(user_name, channel, hook_url))
+	def addSlackNotify(self, user_name, channel, hook_url, suppress_err=True):
+		self._notificators.append(SlackNotification(user_name, channel, hook_url, suppress_err))
 
 	# set default Twitter notification, which is written in secret.py
 	def setTwitter(self):
-		self._notificators.append(TwitterNotification(secret.API_KEY, secret.API_SECRET, secret.ACCESS_TOKEN, secret.ACCESS_SECRET))
+		if not self._set_twitter
+			self._notificators.append(TwitterNotification(secret.API_KEY, secret.API_SECRET, secret.ACCESS_TOKEN, secret.ACCESS_SECRET, self.suppress_err))
+			self._set_twitter = True
 
-	def addTwitterNotify(self, api_key, api_secret, access_token, access_secret):
-		self._notificators.append(TwitterNotification(api_key, api_secret, access_token, access_secret))
+	def addTwitterNotify(self, api_key, api_secret, access_token, access_secret, suppress_err=True):
+		self._notificators.append(TwitterNotification(api_key, api_secret, access_token, access_secret, suppress_err))
 
 	def show_list(self):
 		for idx, noti in enumerate(self._notificators):
