@@ -316,7 +316,7 @@ if __name__ == '__main__':
 	start_time_stamp = now.strftime('%Y/%m/%d %H:%M:%S %Z %z')
 
 	if args.mention_begin:
-		notificate(msg="{}".format(args.msg + ("\n[ begin: {}]".format(start_time_stamp) if args.timestamp else "")), args=args)
+		notificate(msg="{}".format(args.msg_begin + ("\n[ begin: {}]".format(start_time_stamp) if args.timestamp else "")), args=args)
 	
 	# which means input is from pipe or redirection
 	if sys.stdin.isatty() == False:
