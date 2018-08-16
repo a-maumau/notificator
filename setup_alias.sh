@@ -32,10 +32,9 @@ if [ -f "$RC_FILE" ]; then
 	chmod 755 "$INS_DIR"/"$INS_SCRIPT"
 
 	# please use ">>" not ">"
-	echo ""                                    >> "$RC_FILE"
-	echo "function notify() {"                 >> "$RC_FILE"
-	echo "    python $INS_DIR/$INS_SCRIPT \$@" >> "$RC_FILE"
-	echo "}"                                   >> "$RC_FILE"
+	echo ""                                           >> "$RC_FILE"
+	echo "# notify"                                   >> "$RC_FILE"
+	echo "alias notify='python $INS_DIR/$INS_SCRIPT'" >> "$RC_FILE"
 
 	source "$RC_FILE"
 fi

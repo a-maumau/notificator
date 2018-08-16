@@ -5,6 +5,7 @@
 # in case python2
 from __future__ import print_function
 
+import os
 import sys
 import threading
 
@@ -16,6 +17,7 @@ from email.mime.text import MIMEText
 from email.utils import formatdate
 
 import json
+import yaml
 import requests
 from requests_oauthlib import OAuth1Session
 
@@ -23,35 +25,36 @@ from datetime import datetime
 import pytz
 from pytz import all_timezones_set
 
-# rewrite for your use
-class secret:
-	# Gmail should be the best.(well, be honest, I only tested on Gmail...)
-	# if you want to use other mail, please rewrite the mail_notification.py
-	"""
-		if you are not using "2-Step Verification",
-		you need to accept the
-			"Let less secure apps use your account"
-		on your google account.
-		I recommend "2-Step Verification", and set that password
-	"""
-	MAIL_PASSWORD    = "set pass word of GMAIL_ACCOUNT"
-	MAIL_ACCOUNT     = "your_address@gmail.com"
-	MAIL_TO_ADDRESS  = "mail address you want to send a notification mail"
-	MAIL_BCC_ADDRESS = "bcc address"
-	MAIL_SUBJECT     = "subject of the mail"
+# rewrite for your use, or use the .yaml file
+# Gmail should be the best.(well, be honest, I only tested on Gmail...)
+# if you want to use other mail service, please rewrite the codes, sorry...
+"""
+	if you are not using "2-Step Verification",
+	you need to accept the
+		"Let less secure apps use your account"
+	on your google account.
+	I recommend "2-Step Verification", and set that password
+"""
+secrets = {
+	"MAIL_PASSWORD"    : "set pass word of GMAIL_ACCOUNT",
+	"MAIL_ACCOUNT"     : "your_address@gmail.com",
+	"MAIL_TO_ADDRESS"  : "mail address you want to send a notification mail",
+	"MAIL_BCC_ADDRESS" : "bcc address",
+	"MAIL_SUBJECT"     : "subject of the mail",
 
 	# slack
 	# you need get your own application Webhook URL
 	# for the permission of App for slack that you made, it don't always affect the settings. 
-	SLACK_USER_NAME = "slack user name"
-	SLACK_CHANNEL   = "#channel or @channel"
-	SLACK_HOOK_URL  = "hook url for app"
+	"SLACK_USER_NAME" : "slack user name",
+	"SLACK_CHANNEL"   : "#channel or @channel",
+	"SLACK_HOOK_URL"  : "hook url for app",
 
 	#Twitter
-	API_KEY = "consumer/api key"
-	API_SECRET = "consumer/api secret"
-	ACCESS_TOKEN = "access token"
-	ACCESS_SECRET = "access secret"
+	"API_KEY"       : "consumer/api key",
+	"API_SECRET"    : "consumer/api secret",
+	"ACCESS_TOKEN"  : "access token",
+	"ACCESS_SECRET" : "access secret",
+}
 
 class NotificationTemplate(object):
 	__metaclass__ = abc.ABCMeta
@@ -207,26 +210,29 @@ class TwitterNotification(NotificationTemplate):
 		return "mention:{}".format(self.mention_users)
 
 class Notificator:
-	def __init__(self):
+	secrets = secrets
+	def __init__(self, yaml_secrets=None):
 		self._notificators = []
+		if yaml_secrets is not None:
+			self.secrets = yaml_secrets
 
 	# set default mail notification, which is written in secret.py
 	def setMail(self):
-		self._notificators.append(MailNotification(secret.MAIL_PASSWORD, secret.MAIL_ACCOUNT, secret.MAIL_TO_ADDRESS, secret.MAIL_BCC_ADDRESS, secret.MAIL_SUBJECT))
+		self._notificators.append(MailNotification(self.secrets["MAIL_PASSWORD"], self.secrets["MAIL_ACCOUNT"], self.secrets["MAIL_TO_ADDRESS"], self.secrets["MAIL_BCC_ADDRESS"], self.secrets["MAIL_SUBJECT"]))
 
 	def addMailNotify(self, passwd, account, to_addr, bcc_addr, subject):
 		self._notificators.append(MailNotification(passwd, account, to_addr, bcc_addr, subject))
 
 	# set default Slack notification, which is written in secret.py
 	def setSlack(self):
-		self._notificators.append(SlackNotification(secret.SLACK_USER_NAME, secret.SLACK_CHANNEL, secret.SLACK_HOOK_URL))
+		self._notificators.append(SlackNotification(self.secrets["SLACK_USER_NAME"], self.secrets["SLACK_CHANNEL"], self.secrets["SLACK_HOOK_URL"]))
 
 	def addSlackNotify(self, user_name, channel, hook_url):
 		self._notificators.append(SlackNotification(user_name, channel, hook_url))
 
 	# set default Twitter notification, which is written in secret.py
 	def setTwitter(self):
-		self._notificators.append(TwitterNotification(secret.API_KEY, secret.API_SECRET, secret.ACCESS_TOKEN, secret.ACCESS_SECRET))
+		self._notificators.append(TwitterNotification(self.secrets["API_KEY"], self.secrets["API_SECRET"], self.secrets["ACCESS_TOKEN"], self.secrets["ACCESS_SECRET"]))
 
 	def addTwitterNotify(self, api_key, api_secret, access_token, access_secret):
 		self._notificators.append(TwitterNotification(api_key, api_secret, access_token, access_secret))
@@ -262,9 +268,9 @@ class Notificator:
 		else:
 			self._send_notification(msg)
 
-def notificate(msg, args):
+def notificate(msg, args, yaml_secrets=None):
 	# create a Notificator
-	notificator = Notificator()
+	notificator = Notificator(yaml_secrets)
 
 	if args.nomail == False:
 		# all kind of parameter should be in secret
@@ -284,6 +290,8 @@ def notificate(msg, args):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='notify.py [option]\nuse it for your convenient and save time.', epilog="")
 	
+	parser.add_argument('--yaml_path', type=str, default="~/.secrets/notificator_secrets.yaml", help='read from .yaml file. default is ~/.secrets/notificator_secrets.yaml')
+
 	parser.add_argument('--msg', type=str, default="notification of the end of something", help='notification message')
 	parser.add_argument('--msg_begin', type=str, default="notification of the begin of something", help='notification message begining of the job or smething')
 	parser.add_argument('-msg_from_input', action="store_true", default=False, help='use the pipe or redirection input for msg.')
@@ -298,6 +306,12 @@ if __name__ == '__main__':
 	parser.add_argument('-notwitter', action="store_true", default=False, help="won't use twitter")
 
 	args = parser.parse_args()
+
+	if os.path.exists(os.path.expanduser(args.yaml_path)):
+		with open(os.path.expanduser(args.yaml_path), "r") as f:
+			yaml_secrets = yaml.load(f)
+	else:
+		yaml_secrets = None
 	
 	if args.list_timezone:
 		print("##### time zone list #####")
@@ -316,7 +330,7 @@ if __name__ == '__main__':
 	start_time_stamp = now.strftime('%Y/%m/%d %H:%M:%S %Z %z')
 
 	if args.mention_begin:
-		notificate(msg="{}".format(args.msg_begin + ("\n[ begin: {}]".format(start_time_stamp) if args.timestamp else "")), args=args)
+		notificate(msg="{}".format(args.msg_begin + ("\n[ begin: {}]".format(start_time_stamp) if args.timestamp else "")), args=args, yaml_secrets=yaml_secrets)
 	
 	# which means input is from pipe or redirection
 	if sys.stdin.isatty() == False:
@@ -329,4 +343,4 @@ if __name__ == '__main__':
 	end_time_stamp = now.strftime('%Y/%m/%d %H:%M:%S %Z %z')
 
 	# send notification
-	notificate(msg="{}".format(args.msg + ("\n[ begin: {}, end: {}]".format(start_time_stamp, end_time_stamp) if args.timestamp else "")), args=args)
+	notificate(msg="{}".format(args.msg + ("\n[ begin: {}, end: {}]".format(start_time_stamp, end_time_stamp) if args.timestamp else "")), args=args, yaml_secrets=yaml_secrets)

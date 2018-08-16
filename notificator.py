@@ -1,23 +1,41 @@
 # in case python2
 from __future__ import print_function
 
+import os
 import threading
+import yaml
 
 from .notification import MailNotification, SlackNotification, TwitterNotification
-from . import secret
 
 class Notificator:
-	def __init__(self, suppress_err=True):
+	def __init__(self, secrets="~/.secrets/notificator_secrets.yaml", suppress_err=True):
+		"""
+			secrets: path to your secret .yaml, or dictionary which contains the secrets
+				for mail keys
+					"MAIL_PASSWORD", "MAIL_ACCOUNT", "MAIL_TO_ADDRESS", "MAIL_BCC_ADDRESS", "MAIL_SUBJECT"
+				for slack keys
+					"SLACK_USER_NAME", "SLACK_CHANNEL", "SLACK_HOOK_URL"
+				for twitter keys
+					"API_KEY", "API_SECRET", "ACCESS_TOKEN", "ACCESS_SECRET"
+		"""
 		self._notificators = []
 		self.suppress_err = suppress_err
 		self._set_mail = False
 		self._set_slack = False
 		self._set_twitter = False
 
+		if isinstance(secrets, str):
+			if os.path.exists(os.path.expanduser(secrets)):
+				with open(os.path.expanduser(secrets), "r") as f:
+					self.secrets = yaml.load(f)
+		else:
+			self.secrets = secrets
+
+
 	# set default mail notification, which is written in secret.py
 	def setMail(self):
 		if not self._set_mail:
-			self._notificators.append(MailNotification(secret.MAIL_PASSWORD, secret.MAIL_ACCOUNT, secret.MAIL_TO_ADDRESS, secret.MAIL_BCC_ADDRESS, secret.MAIL_SUBJECT, self.suppress_err))
+			self._notificators.append(MailNotification(self.secrets["MAIL_PASSWORD"], self.secrets["MAIL_ACCOUNT"], self.secrets["MAIL_TO_ADDRESS"], self.secrets["MAIL_BCC_ADDRESS"], self.secrets["MAIL_SUBJECT"], self.suppress_err))
 			self._set_mail = True
 
 	def addMailNotify(self, passwd, account, to_addr, bcc_addr, subject, suppress_err=True):
@@ -26,7 +44,7 @@ class Notificator:
 	# set default Slack notification, which is written in secret.py
 	def setSlack(self):
 		if not self._set_slack:
-			self._notificators.append(SlackNotification(secret.SLACK_USER_NAME, secret.SLACK_CHANNEL, secret.SLACK_HOOK_URL, self.suppress_err))
+			self._notificators.append(SlackNotification(self.secrets["SLACK_USER_NAME"], self.secrets["SLACK_CHANNEL"], self.secrets["SLACK_HOOK_URL"], self.suppress_err))
 			self._set_slack = True
 
 	def addSlackNotify(self, user_name, channel, hook_url, suppress_err=True):
@@ -35,7 +53,7 @@ class Notificator:
 	# set default Twitter notification, which is written in secret.py
 	def setTwitter(self):
 		if not self._set_twitter
-			self._notificators.append(TwitterNotification(secret.API_KEY, secret.API_SECRET, secret.ACCESS_TOKEN, secret.ACCESS_SECRET, self.suppress_err))
+			self._notificators.append(TwitterNotification(self.secrets["API_KEY"], self.secrets["API_SECRET"], self.secrets["ACCESS_TOKEN"], self.secrets["ACCESS_SECRET"], self.suppress_err))
 			self._set_twitter = True
 
 	def addTwitterNotify(self, api_key, api_secret, access_token, access_secret, suppress_err=True):

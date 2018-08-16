@@ -1,7 +1,9 @@
 from notificator import Notificator
 
 # create a Notificator
-notificator = Notificator()
+# the secret should be in "~/.secrets/notificator_secrets.yaml" for default.
+# for detail of .yaml, see "example/example.yaml"
+notificator = Notificator(secrets="~/.secrets/notificator_secrets.yaml")
 
 # setup notification from Slack
 # all kinds of parameter should be in secret.py

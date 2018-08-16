@@ -92,7 +92,7 @@ class MailNotification(NotificationTemplate):
 				print("which means, could not send a notification mail...")
 	
 	def contents(self):
-		return "pass:********, account:{}, to:{}, bcc:{}, subject:{}".format(self._from_addr, self._to_addr, self._bcc_addr, self._subject)
+		return "account:{}, to:{}, bcc:{}, subject:{}".format(self._from_addr, self._to_addr, self._bcc_addr, self._subject)
 
 class SlackNotification(NotificationTemplate):
 	def __init__(self, user_name, channel, hook_url, suppress_err=True):
