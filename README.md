@@ -3,29 +3,29 @@
 ☑️Twitter  
 
 # Require  
-at least require **requests, requests_oauthlib**.  
+At least require **requests, requests_oauthlib**.  
 ```
 pip (or pip3) install requests equests_oauthlib
 ```  
 Other kinds of libraries are the same.  
-if you need, install it.  
-Also you need to **prepare the `secret.py`** by yourself.  
-see the `secret_sample.py` for detail.
+If you need, install it.  
+Also you need to **prepare the `notificator_secrets.yaml`** by yourself.  
+See the `example.yaml` for detail.
 
 # Usage  
-You can embed this program in your code.  
-see the `test_notification.py` for example.  
-Also it is one way to use in pipe.  
+You can embed this module in your code.  
+See the `test_notification.py` for example.  
+Also, it is one way to use in pipe.  
 For example,  
 ```
-hogehoge | python slack_notify.py
+hogehoge | python notify.py
 ```  
-This will make `slack_notify.py` run after `hogehoge` ended.  
+This will make `notify.py` run after `hogehoge` ended.  
 I recommend this style because we do not need to embed this in the code.  
 
 # For Lazy People
 You can just use `notify.py`  
-only you need to do is rewrite the `secret` class for your setting.  
+Only you need to do is rewrite the secret in the code or `notificator_secrets.yaml` for your setting.  
 
 # setup_alias.sh
-set up a alias of "python notify.py" to notify.
+It will set up a alias of "python notify.py" to notify in your rc file.
