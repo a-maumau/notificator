@@ -52,7 +52,7 @@ class Notificator:
 
 	# set default Twitter notification, which is written in secret.py
 	def setTwitter(self):
-		if not self._set_twitter
+		if not self._set_twitter:
 			self._notificators.append(TwitterNotification(self.secrets["API_KEY"], self.secrets["API_SECRET"], self.secrets["ACCESS_TOKEN"], self.secrets["ACCESS_SECRET"], self.suppress_err))
 			self._set_twitter = True
 
